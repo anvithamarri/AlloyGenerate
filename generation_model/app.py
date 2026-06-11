@@ -67,13 +67,36 @@ def make_zip(dataset):
                 zf.writestr(f"{i:03d}_{r['formula']}.cif", r["cif"])
     return buf.getvalue()
 
-@st.cache_resource
+@st.cache_resource  # CRITICAL: Prevents reloading model on every UI interaction
 def load_backend():
+    # 1. Dynamic Device Selection
     device = "cuda" if torch.cuda.is_available() else ("mps" if torch.backends.mps.is_available() else "cpu")
-    tok  = CIFTokenizer()
-    ckpt = torch.load("ckpt.pt", map_location=device)
-    m    = GPT(GPTConfig())
-    m.load_state_dict({k.replace("_orig_mod.", ""): v for k, v in ckpt["model"].items()}, strict=False)
+    
+    # 2. Robust Path Handling
+    # This finds the directory of the current script, regardless of where you run it from
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    ckpt_path = os.path.join(base_dir, "ckpt.pt")
+    
+    if not os.path.exists(ckpt_path):
+        raise FileNotFoundError(
+            f"Checkpoint not found at: {ckpt_path}. "
+            "Ensure the file is in the same directory as this script."
+        )
+
+    # 3. Initialization
+    tok = CIFTokenizer()
+    
+    # Load checkpoint
+    ckpt = torch.load(ckpt_path, map_location=device)
+    
+    # 4. Model Loading
+    m = GPT(GPTConfig())
+    
+    # Safely load state dict
+    # We use .get() to handle potential structure changes gracefully
+    state_dict = ckpt.get("model", ckpt) # Handles both {model: ...} and flat dicts
+    m.load_state_dict({k.replace("_orig_mod.", ""): v for k, v in state_dict.items()}, strict=False)
+    
     m.to(device).eval()
     return m, tok, device
 
