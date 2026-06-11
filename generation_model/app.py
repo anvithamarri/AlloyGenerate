@@ -12,6 +12,7 @@ from model_utils import GPT, GPTConfig
 from CIFTokenizer import CIFTokenizer
 from mcts import MCTSSampler, MCTSEvaluator, PUCTSelector, ContextSensitiveTreeBuilder
 from scorer import HeuristicPhysicalScorer
+import os
 
 # -- CONSTANTS -----------------------------------------------
 REFRACTORY = {"W","Mo","Ta","Nb","Re","Hf","Zr","V","Cr","Ti"}
