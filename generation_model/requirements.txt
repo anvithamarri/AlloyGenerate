@@ -1,0 +1,26 @@
+# Core app
+streamlit==1.58.0
+torch==2.12.0
+numpy==2.4.6
+pandas==3.0.3
+
+# Materials science / structure handling
+ase==3.28.0
+chgnet==0.4.2
+pymatgen-core==2026.5.18
+pymatgen==2026.5.4
+spglib==2.7.0
+scipy==1.17.1
+
+# Scoring / optional ZMQ scorer
+pyzmq==27.1.0
+
+# Runtime dependencies used by pymatgen/chgnet/streamlit in this environment
+matplotlib==3.10.9
+monty==2026.5.18
+networkx==3.6.1
+plotly==6.8.0
+requests==2.34.2
+sympy==1.14.0
+tqdm==4.68.2
+typing_extensions==4.15.0

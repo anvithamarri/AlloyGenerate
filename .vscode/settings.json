@@ -1,0 +1,6 @@
+{
+  "python.defaultInterpreterPath": "${workspaceFolder}/generation_model/venv/bin/python",
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}/generation_model"
+  ]
+}
