@@ -7,11 +7,14 @@ from pymatgen.entries.compatibility import MaterialsProject2020Compatibility
 MP_API_KEY = os.getenv("MP_API_KEY")
 HULL_STABLE_CUTOFF = 0.05
 
+BASE_DIR    = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT   = os.path.abspath(os.path.join(BASE_DIR, "..", ".."))
+RESULTS_DIR = os.path.join(REPO_ROOT, "generation_model", "results")
+
 # ==========================================
 # LOAD STABLE CANDIDATES FROM run_metrics.py OUTPUT
-# (chains directly off the previous script — no hardcoded list)
 # ==========================================
-filtered_df = pd.read_csv("filtered_alloy_metrics_final.csv")
+filtered_df = pd.read_csv(os.path.join(RESULTS_DIR, "filtered_alloy_metrics_final.csv"))
 stable_df = filtered_df[filtered_df["E_Above_Hull"] <= HULL_STABLE_CUTOFF].copy()
 stable_formulas = stable_df["Formula"].tolist()
 
@@ -72,7 +75,7 @@ mpr.session.close()
 # SAVE + SUMMARY
 # ==========================================
 novelty_df = pd.DataFrame(novelty_results)
-novelty_df.to_csv("mp_novelty_check.csv", index=False)
+novelty_df.to_csv(os.path.join(RESULTS_DIR, "mp_novelty_check.csv"), index=False)
 
 n_novel = novelty_df["Is_Novel_vs_MP"].sum()
 n_total = len(novelty_df)
