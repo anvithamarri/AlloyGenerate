@@ -19,9 +19,9 @@ from chgnet.model import StructOptimizer
 BASE_DIR     = os.path.dirname(os.path.abspath(__file__))   # generation_model/validation/
 REPO_ROOT    = os.path.abspath(os.path.join(BASE_DIR, "..", ".."))  # AlloyGenerate/
 
-CIF_FOLDER       = os.path.join(REPO_ROOT, "results", "act_gen_174")
+CIF_FOLDER       = os.path.join(REPO_ROOT, "generation_model", "results", "act_gen_174")
 TRAIN_CIF_FOLDER = os.path.join(REPO_ROOT, "cifs")
-RESULTS_DIR      = os.path.join(REPO_ROOT, "results")
+RESULTS_DIR      = os.path.join(REPO_ROOT, "generation_model", "results")
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
 df.to_csv(os.path.join(RESULTS_DIR, "alloy_generation_metrics_final.csv"), index=False)
