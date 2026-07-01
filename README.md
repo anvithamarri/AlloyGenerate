@@ -12,13 +12,23 @@ Quick overview
 - Relaxes structures with ASE + CHGNet and scores physical validity.
 - Exports validated CIFs as a ZIP dataset and reports summary metrics.
 
+Features
+--------
+
+- **Dynamic Device Selection**: Automatically detects and uses CUDA, MPS (Apple Silicon), or CPU.
+- **Robust Path Handling**: Dynamically locates checkpoint and resources regardless of run location.
+- **Material Classification**: Identifies intermetallic types (Standard, Refractory, Precious Metal).
+- **Comprehensive Validation**: Checks atomic distances, energy per atom, and force thresholds.
+- **Dataset Metrics**: Reports yield, validity rates, and alloy type diversity.
+
 Repo layout (important files)
 -----------------------------
 
 - `generation_model/app.py` — Streamlit entrypoint (UI + orchestration).
-- `generation_model/*` — model, sampling, scoring, and helper modules.
-- `cifs/` — example/generated CIF files stored in the repo.
-- `generation_model/ckpt.pt` — trained model checkpoint expected at runtime.
+- `generation_model/*.py` — model, sampling, scoring, and helper modules.
+- `generation_model/requirements.txt` — Python dependencies.
+- `generation_model/ckpt.pt` — trained model checkpoint (required at runtime).
+- `cifs/` — example/generated CIF files.
 
 Quickstart (local)
 ------------------
@@ -47,24 +57,74 @@ python -m streamlit run app.py
 Deployment
 ----------
 
-If you have deployed the app, paste the public URL above where the placeholder is. Common hosting options:
+The app is deployed on Streamlit Cloud at **https://alloygenerate.streamlit.app/**
 
+Common hosting options:
 - Streamlit Cloud (share.streamlit.io)
 - A small VM or container (Docker) behind HTTPS
 
-Example:
+Configuration
+--------------
 
-Live app: https://alloygenerate.streamlit.app/
+### Model Loading
+
+The app uses robust path handling to locate the model checkpoint:
+
+- The checkpoint file (`ckpt.pt`) must be in the `generation_model/` directory.
+- The app dynamically discovers the directory location, making it portable across environments.
+
+### Device Configuration
+
+The app automatically selects the best available device:
+- **CUDA** (NVIDIA GPUs) — fastest
+- **MPS** (Apple Silicon) — optimized for M1/M2/M3 Macs
+- **CPU** — fallback option (slower)
+
+### Customization
+
+In the Streamlit sidebar, you can adjust:
+- **Dataset Size**: Number of generation attempts (1-5000)
+- Generate button to start the process
 
 Data and outputs
 ----------------
 
 - Example CIFs and generated datasets are under the `cifs/` directory.
 - Valid generated CIFs are exported as `intermetallics.zip` by the app when using the export feature.
+- Results include comprehensive metrics:
+  - Valid crystal count and yield percentages
+  - Energy per atom (eV)
+  - Maximum atomic forces (eV/Å)
+  - Alloy type distribution
 
 Troubleshooting
 ---------------
 
-- Ensure your virtualenv is active when running Streamlit (`which python` should point to `generation_model/venv/bin/python`).
-- If CUDA/MPS is unavailable, the app will fall back to CPU (may be slower).
+- **Virtualenv issues**: Ensure your virtualenv is active when running Streamlit (`which python` should point to `generation_model/venv/bin/python`).
 
+- **Checkpoint not found**: If you see a `FileNotFoundError` for `ckpt.pt`, ensure the checkpoint file is located in the `generation_model/` directory.
+
+- **Device acceleration unavailable**: If CUDA/MPS is unavailable, the app will fall back to CPU (may be significantly slower).
+
+- **Insufficient system memory**: Large dataset sizes on CPU may exceed available RAM. Start with smaller sizes (< 100) and increase gradually.
+
+- **Structure relaxation errors**: If structures fail to relax, this is normal and expected. The app logs rejection reasons and continues attempting new candidates.
+
+Development
+-----------
+
+For contributing or modifying the app:
+
+1. All model and utility modules are in `generation_model/`
+2. Follow the existing code structure and maintain compatibility with Streamlit caching
+3. Test locally before deploying
+
+Dependencies
+------------
+
+Key dependencies (see `requirements.txt` for complete list):
+- **Streamlit** — UI framework
+- **PyTorch** — model inference
+- **ASE** — atomic structure handling
+- **CHGNet** — structure relaxation and energy calculations
+- **PyMatGen** — materials informatics
