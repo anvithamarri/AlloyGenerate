@@ -27,8 +27,7 @@ Repo layout (important files)
 - `generation_model/app.py` — Streamlit entrypoint (UI + orchestration).
 - `generation_model/*.py` — model, sampling, scoring, and helper modules.
 - `generation_model/requirements.txt` — Python dependencies.
-- `generation_model/ckpt.pt` — trained model checkpoint (required at runtime).
-- `cifs/` — example/generated CIF files.
+- `cifs/` — finetuning CIF files.
 
 Quickstart (local)
 ------------------
@@ -89,35 +88,13 @@ In the Streamlit sidebar, you can adjust:
 Data and outputs
 ----------------
 
-- Example CIFs and generated datasets are under the `cifs/` directory.
+- finetuning datasets are under the `cifs/` directory.
 - Valid generated CIFs are exported as `intermetallics.zip` by the app when using the export feature.
 - Results include comprehensive metrics:
   - Valid crystal count and yield percentages
   - Energy per atom (eV)
   - Maximum atomic forces (eV/Å)
   - Alloy type distribution
-
-Troubleshooting
----------------
-
-- **Virtualenv issues**: Ensure your virtualenv is active when running Streamlit (`which python` should point to `generation_model/venv/bin/python`).
-
-- **Checkpoint not found**: If you see a `FileNotFoundError` for `ckpt.pt`, ensure the checkpoint file is located in the `generation_model/` directory.
-
-- **Device acceleration unavailable**: If CUDA/MPS is unavailable, the app will fall back to CPU (may be significantly slower).
-
-- **Insufficient system memory**: Large dataset sizes on CPU may exceed available RAM. Start with smaller sizes (< 100) and increase gradually.
-
-- **Structure relaxation errors**: If structures fail to relax, this is normal and expected. The app logs rejection reasons and continues attempting new candidates.
-
-Development
------------
-
-For contributing or modifying the app:
-
-1. All model and utility modules are in `generation_model/`
-2. Follow the existing code structure and maintain compatibility with Streamlit caching
-3. Test locally before deploying
 
 Dependencies
 ------------
