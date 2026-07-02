@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Virtual environments
+venv/
+env/
+.env
+.venv/
+
+# Model checkpoints (tracked via Git LFS instead)
+*.pt
+*.bin
+!preprocessing/train.bin
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# PyCharm / JetBrains
+.idea/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# API keys / secrets
+.env
+*.env
+secrets.toml
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Logs
+*.log
+logs/
+
+# Compiled extensions
+*.so
+*.dylib
